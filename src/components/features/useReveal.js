@@ -1,0 +1,43 @@
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
+export default function useReveal(
+  threshold = 0.15
+) {
+  const ref = useRef(null);
+
+  const [visible, setVisible] =
+    useState(false);
+
+  useEffect(() => {
+    if (!ref.current) return;
+
+    const observer =
+      new IntersectionObserver(
+        ([entry]) => {
+          if (
+            entry.isIntersecting
+          ) {
+            setVisible(true);
+
+            observer.disconnect();
+          }
+        },
+        {
+          threshold,
+          rootMargin:
+            "120px 0px",
+        }
+      );
+
+    observer.observe(ref.current);
+
+    return () =>
+      observer.disconnect();
+  }, [threshold]);
+
+  return [ref, visible];
+}

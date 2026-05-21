@@ -1,9 +1,19 @@
 import {
+  memo,
+  useEffect,
+  useRef,
+} from "react";
+
+import gsap from "gsap";
+
+import {
   Star,
   Quote,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
+
+/* =========================================================
+   DATA
+========================================================= */
 
 const feedbacks = [
   {
@@ -34,28 +44,324 @@ const feedbacks = [
   },
 ];
 
-export default function Feedback() {
+/* =========================================================
+   INTERSECTION REVEAL
+========================================================= */
+
+function useReveal() {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+
+    const element = ref.current;
+
+    const observer =
+      new IntersectionObserver(
+        ([entry]) => {
+          if (
+            !entry.isIntersecting
+          )
+            return;
+
+          /* =========================================================
+             GSAP
+          ========================================================= */
+
+          const heading =
+            element.querySelector(
+              ".feedback-heading"
+            );
+
+          const cards =
+            element.querySelectorAll(
+              ".feedback-card"
+            );
+
+          gsap.fromTo(
+            heading?.children,
+            {
+              opacity: 0,
+              y: 40,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              stagger: 0.08,
+              duration: 0.8,
+              ease: "power3.out",
+            }
+          );
+
+          gsap.fromTo(
+            cards,
+            {
+              opacity: 0,
+              y: 60,
+              scale: 0.96,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.9,
+              stagger: 0.12,
+              ease: "power4.out",
+            }
+          );
+
+          observer.disconnect();
+        },
+        {
+          threshold: 0.12,
+          rootMargin:
+            "120px 0px",
+        }
+      );
+
+    observer.observe(element);
+
+    return () =>
+      observer.disconnect();
+  }, []);
+
+  return ref;
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+const FeedbackCard = memo(
+  function FeedbackCard({
+    item,
+  }) {
+    return (
+      <article
+        className="
+          feedback-card
+          group
+          relative
+          overflow-hidden
+          rounded-[30px]
+          border
+          border-[#eadfcd]
+          bg-white
+          p-7
+          opacity-0
+          will-change-transform
+
+          lg:p-8
+        "
+      >
+        {/* HOVER LIGHT */}
+
+        <div
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            opacity-0
+            transition-opacity
+            duration-300
+            group-hover:opacity-100
+            bg-[radial-gradient(circle_at_top_right,rgba(214,178,111,0.12),transparent_42%)]
+          "
+        />
+
+        {/* CONTENT */}
+
+        <div className="relative z-10">
+          {/* TOP */}
+
+          <div className="mb-7 flex items-start justify-between gap-4">
+            <div className="flex items-center gap-4">
+              {/* IMAGE */}
+
+              <img
+                src={item.image}
+                alt={item.name}
+                loading="lazy"
+                decoding="async"
+                width="70"
+                height="70"
+                className="
+                  h-[64px]
+                  w-[64px]
+                  rounded-full
+                  border-4
+                  border-white
+                  object-cover
+                  shadow-md
+                "
+              />
+
+              {/* INFO */}
+
+              <div>
+                <h3
+                  className="
+                    text-[1.08rem]
+                    font-bold
+                    text-[#07152f]
+                  "
+                >
+                  {item.name}
+                </h3>
+
+                <p
+                  className="
+                    text-[0.92rem]
+                    font-medium
+                    text-[#8b6a2f]
+                  "
+                >
+                  {item.role}
+                </p>
+              </div>
+            </div>
+
+            {/* QUOTE */}
+
+            <div
+              className="
+                flex
+                h-[50px]
+                w-[50px]
+                shrink-0
+                items-center
+                justify-center
+                rounded-full
+                bg-gradient-to-br
+                from-[#f3dfb2]
+                to-[#c89d49]
+                text-white
+              "
+            >
+              <Quote size={20} />
+            </div>
+          </div>
+
+          {/* STARS */}
+
+          <div className="mb-5 flex gap-1 text-[#d6b26f]">
+            {Array.from({
+              length: 5,
+            }).map((_, index) => (
+              <Star
+                key={index}
+                size={16}
+                fill="currentColor"
+              />
+            ))}
+          </div>
+
+          {/* FEEDBACK */}
+
+          <p
+            className="
+              text-[0.98rem]
+              leading-[1.9]
+              text-[#66748f]
+            "
+          >
+            {item.feedback}
+          </p>
+        </div>
+      </article>
+    );
+  }
+);
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+function Feedback() {
+  const sectionRef =
+    useReveal();
+
   return (
-    <section className="relative overflow-hidden bg-[#f7f5f2] py-24 sm:py-32">
+    <section
+      ref={sectionRef}
+      className="
+        relative
+        overflow-hidden
+        bg-[#f7f5f2]
+        py-20
 
-      {/* BACKGROUND */}
+        sm:py-24
 
-      <div className="absolute inset-0 overflow-hidden">
+        lg:py-32
+      "
+    >
+      {/* BG */}
 
-        <div className="absolute top-0 left-0 w-[400px] h-[400px] rounded-full bg-[#d6b26f]/10 blur-[120px]" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div
+          className="
+            absolute
+            left-0
+            top-0
+            h-[280px]
+            w-[280px]
+            rounded-full
+            bg-[#d6b26f]/8
+            blur-[70px]
 
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-[#d6b26f]/10 blur-[120px]" />
+            lg:h-[360px]
+            lg:w-[360px]
+          "
+        />
 
+        <div
+          className="
+            absolute
+            bottom-0
+            right-0
+            h-[280px]
+            w-[280px]
+            rounded-full
+            bg-[#d6b26f]/8
+            blur-[70px]
+
+            lg:h-[360px]
+            lg:w-[360px]
+          "
+        />
       </div>
 
       {/* CONTAINER */}
 
-      <div className="relative z-10 mx-auto w-full max-w-[1450px] px-5 sm:px-8 lg:px-10 xl:px-12">
+      <div
+        className="
+          relative
+          z-10
+          mx-auto
+          w-full
+          max-w-[1450px]
+          px-5
 
+          sm:px-8
+
+          lg:px-10
+
+          xl:px-12
+        "
+      >
         {/* HEADING */}
 
-        <div className="mx-auto mb-20 max-w-[850px] text-center">
+        <div
+          className="
+            feedback-heading
+            mx-auto
+            mb-16
+            max-w-[850px]
+            text-center
 
+            lg:mb-20
+          "
+        >
           <div
             className="
               mb-6
@@ -65,13 +371,13 @@ export default function Feedback() {
               rounded-full
               border
               border-[#d6b26f]/20
-              bg-white/80
+              bg-white
               px-5
               py-3
               text-[0.92rem]
               font-semibold
               text-[#c89d49]
-              shadow-[0_10px_40px_rgba(15,23,42,0.05)]
+              opacity-0
             "
           >
             <Star size={16} />
@@ -83,11 +389,12 @@ export default function Feedback() {
             className="
               mb-6
               font-['Cormorant_Garamond']
-              text-[clamp(3rem,6vw,5.8rem)]
+              text-[clamp(2.8rem,6vw,5.8rem)]
               font-bold
               leading-[0.95]
               tracking-[-0.04em]
               text-[#07152f]
+              opacity-0
             "
           >
             Trusted by
@@ -101,192 +408,38 @@ export default function Feedback() {
               text-[1rem]
               leading-[2]
               text-[#66748f]
+              opacity-0
+
               sm:text-[1.08rem]
             "
           >
-            Discover how churches and parish communities
-            are transforming their operations with Fidelis.
+            Discover how churches and
+            parish communities are
+            transforming their
+            operations with Fidelis.
           </p>
         </div>
 
-        {/* FEEDBACK GRID */}
+        {/* GRID */}
 
-        <div className="grid gap-7 lg:grid-cols-3">
+        <div
+          className="
+            grid
+            gap-6
 
-          {feedbacks.map((item, index) => (
-            <div
-              key={index}
-              className="
-                group
-                relative
-                overflow-hidden
-                rounded-[34px]
-                border
-                border-[#ded2bf]
-                bg-gradient-to-br
-                from-[#f6f1e8]
-                via-[#efe7db]
-                to-[#e8dfd1]
-                p-8
-                shadow-[0_20px_60px_rgba(15,23,42,0.06)]
-                transition-all
-                duration-500
-                hover:-translate-y-2
-                hover:shadow-[0_30px_90px_rgba(15,23,42,0.10)]
-              "
-            >
-
-              {/* GLOW */}
-
-              <div
-                className="
-                  absolute
-                  inset-0
-                  opacity-0
-                  transition-opacity
-                  duration-500
-                  group-hover:opacity-100
-                  bg-[radial-gradient(circle_at_top_right,rgba(214,178,111,0.16),transparent_42%)]
-                "
-              />
-
-              {/* CONTENT */}
-
-              <div className="relative z-10">
-
-                {/* TOP */}
-
-                <div className="mb-8 flex items-start justify-between">
-
-                  <div className="flex items-center gap-4">
-
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="
-                        h-[70px]
-                        w-[70px]
-                        rounded-full
-                        object-cover
-                        border-4
-                        border-white/80
-                        shadow-lg
-                      "
-                    />
-
-                    <div>
-
-                      <h3 className="text-[1.2rem] font-bold text-[#07152f]">
-
-                        {item.name}
-
-                      </h3>
-
-                      <p className="text-[#8b6a2f] font-medium">
-
-                        {item.role}
-
-                      </p>
-                    </div>
-                  </div>
-
-                  <div
-                    className="
-                      flex
-                      h-[52px]
-                      w-[52px]
-                      items-center
-                      justify-center
-                      rounded-full
-                      bg-gradient-to-br
-                      from-[#f3dfb2]
-                      to-[#c89d49]
-                      text-white
-                      shadow-[0_15px_35px_rgba(200,157,73,0.25)]
-                    "
-                  >
-                    <Quote size={22} />
-                  </div>
-                </div>
-
-                {/* STARS */}
-
-                <div className="mb-6 flex items-center gap-1 text-[#d6b26f]">
-
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      size={18}
-                      fill="currentColor"
-                    />
-                  ))}
-                </div>
-
-                {/* FEEDBACK */}
-
-                <p
-                  className="
-                    text-[1rem]
-                    leading-[2]
-                    text-[#66748f]
-                  "
-                >
-                  {item.feedback}
-                </p>
-              </div>
-            </div>
+            lg:grid-cols-3
+          "
+        >
+          {feedbacks.map((item) => (
+            <FeedbackCard
+              key={item.name}
+              item={item}
+            />
           ))}
-        </div>
-
-        {/* CONTROLS */}
-
-        <div className="mt-14 flex items-center justify-center gap-4">
-
-          <button
-            className="
-              flex
-              h-[58px]
-              w-[58px]
-              items-center
-              justify-center
-              rounded-full
-              border
-              border-[#ded2bf]
-              bg-white/80
-              text-[#07152f]
-              shadow-[0_10px_30px_rgba(15,23,42,0.05)]
-              transition-all
-              duration-300
-              hover:bg-[#c89d49]
-              hover:text-white
-            "
-          >
-            <ChevronLeft size={22} />
-          </button>
-
-          <button
-            className="
-              flex
-              h-[58px]
-              w-[58px]
-              items-center
-              justify-center
-              rounded-full
-              border
-              border-[#ded2bf]
-              bg-white/80
-              text-[#07152f]
-              shadow-[0_10px_30px_rgba(15,23,42,0.05)]
-              transition-all
-              duration-300
-              hover:bg-[#c89d49]
-              hover:text-white
-            "
-          >
-            <ChevronRight size={22} />
-          </button>
         </div>
       </div>
     </section>
   );
 }
+
+export default memo(Feedback);
