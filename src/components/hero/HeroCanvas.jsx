@@ -28,7 +28,7 @@ export default function HeroCanvas() {
         position: [0, 0, 6],
         fov: 35,
       }}
-      className="relative z-10 h-full w-full"
+      className="relative z-10 h-full w-full pointer-events-none"
     >
       <ambientLight intensity={1.3} />
 
