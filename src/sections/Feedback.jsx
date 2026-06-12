@@ -282,11 +282,7 @@ function Feedback() {
     useReveal();
 
   return (
-    <section
-      ref={sectionRef}
-      className="
-        relative
-        overflow-hidden
+    <section ref={sectionRef} className="relative overflow-hidden
         bg-[#f7f5f2]
         py-20
         sm:py-24
@@ -295,39 +291,9 @@ function Feedback() {
       id="feedback"
     >
       {/* BG */}
-
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div
-          className="
-            absolute
-            left-0
-            top-0
-            h-[280px]
-            w-[280px]
-            rounded-full
-            bg-[#d6b26f]/8
-            blur-[70px]
-
-            lg:h-[360px]
-            lg:w-[360px]
-          "
-        />
-
-        <div
-          className="
-            absolute
-            bottom-0
-            right-0
-            h-[280px]
-            w-[280px]
-            rounded-full
-            bg-[#d6b26f]/8
-            blur-[70px]
-
-            lg:h-[360px]
-            lg:w-[360px]
-          "
-        />
+        <div className="absolute left-0 top-0 h-[280px] w-[280px] rounded-full bg-[#d6b26f]/8 blur-[70px] lg:h-[360px] lg:w-[360px] " />
+          <div className="absolute bottom-0 right-0 h-[280px] w-[280px] rounded-full bg-[#d6b26f]/8 blur-[70px] lg:h-[360px] lg:w-[360px]"/>
       </div>
 
       {/* CONTAINER */}
