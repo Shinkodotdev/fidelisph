@@ -92,6 +92,7 @@ function Features() {
 
         lg:py-32
       "
+      id="features"
     >
       {/* BG */}
 

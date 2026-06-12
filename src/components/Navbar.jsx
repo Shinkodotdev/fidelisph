@@ -58,7 +58,7 @@ export default function Navbar() {
           {/* Launch Platform */}
           <div className="hidden lg:flex items-center">
             <a
-              href="YOUR_REDIRECT_LINK"
+              href="https://thefidelis.netlify.app/"
               className="h-14 px-8 rounded-full bg-gradient-to-br from-[#d8b36a] to-[#c89d49] text-white font-semibold shadow-gold hover:-translate-y-1 transition-all flex items-center"
             >
               Launch Platform

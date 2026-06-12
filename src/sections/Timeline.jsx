@@ -83,6 +83,7 @@ function Timeline() {
 
         lg:py-32
       "
+       id="timeline"
     >
       {/* BG */}
 

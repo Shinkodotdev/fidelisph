@@ -289,11 +289,10 @@ function Feedback() {
         overflow-hidden
         bg-[#f7f5f2]
         py-20
-
         sm:py-24
-
         lg:py-32
       "
+      id="feedback"
     >
       {/* BG */}
 

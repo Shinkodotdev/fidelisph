@@ -38,6 +38,7 @@ export default function Hero() {
 
   return (
     <section
+    
       ref={heroRef}
       className="
         relative
@@ -47,6 +48,7 @@ export default function Hero() {
         via-[#ebe4d7]
         to-[#e3dac9]
       "
+      id="home"
     >
       <HeroBackground />
       <div className=" relative z-10 mx-auto grid min-h-screen w-full max-w-[1450px] items-center gap-12 px-5 pb-16 pt-[110px] sm:px-8 sm:pt-[130px] lg:grid-cols-2 lg:gap-20 lg:px-10 lg:py-0 xl:px-12">

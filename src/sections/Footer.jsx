@@ -177,11 +177,11 @@ export default function Footer() {
             <div className="flex flex-col gap-4">
 
               {[
-                "Home",
-                "Features",
-                "Mission",
-                "Feedback",
-                "Timeline",
+                "home",
+                "features",
+                "mission",
+                "feedback",
+                "timeline",
               ].map((item, index) => (
                 <a
                   key={index}
